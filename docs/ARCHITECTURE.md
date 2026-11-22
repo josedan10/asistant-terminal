@@ -7,27 +7,25 @@ Tauri app with:
 - Terminal: xterm.js + PTY (via tauri-plugin-pty or portable-pty)
 - Editor: CodeMirror 6
 - Layout: react-resizable-panels
-- AI Panel: Free model improver + multi-agent executor + **RAG module**
+- AI Panel: Free model improver + multi-agent executor + **Decision & Amendment Memory**
 
 ## AI Flow
 
 1. User enters rough instructions
-2. Free model (Ollama / Groq / Gemini) improves and structures them (optionally with RAG context)
+2. Free model improves and structures them (using past amendments as examples)
 3. User reviews/edits (human-in-the-loop)
-4. Selected agent (Claude, Grok, etc.) or orchestrator executes (with RAG context)
-5. Session state synced via GitHub
+4. Amendment is stored in Decision & Amendment Memory
+5. Selected agent or orchestrator executes (optionally with relevant past decisions)
+6. Session state (including memory) synced via GitHub
 
-## RAG Module
+## Decision & Amendment Memory
 
-Retrieval-Augmented Generation to ground AI responses in the actual project:
-- Indexes codebase, docs, and session history
-- Provides relevant context to the free model and agents
-- Improves accuracy and reduces hallucinations
+Learns from the instructions, refinements, and decisions made during daily work so future interactions are better aligned with how you actually prefer to work.
 
-See `docs/RAG_MODULE.md` for details.
+See `docs/DECISION_MEMORY.md` for details.
 
 ## Agents
 
 - Direct call or orchestrator-driven
 - Tools: bash, file ops, git, etc.
-- Can receive RAG-retrieved context
+- Can receive relevant past decisions and accepted patterns

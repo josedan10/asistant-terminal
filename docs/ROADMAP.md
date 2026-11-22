@@ -22,8 +22,13 @@
 ## Phase 5 – Polish
 - Drag & drop, code highlighting to AI, git UI, theming
 
-## Phase 6 – RAG Module
-- Local embeddings + vector store
-- Index codebase and docs
-- Inject context into free model and agents
-- Toggle in AI panel
+## Phase 6 – Decision & Amendment Memory
+- Capture rough → improved → final edited instructions
+- Store lightweight decision log
+- Retrieve similar past amendments for the free model
+- Sync memory with GitHub session state
+
+## Later
+- Optional codebase RAG as a complementary grounding module
+- Embeddings for better memory retrieval
+- Agent injection of past decisions
