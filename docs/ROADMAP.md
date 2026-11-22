@@ -21,3 +21,9 @@
 
 ## Phase 5 – Polish
 - Drag & drop, code highlighting to AI, git UI, theming
+
+## Phase 6 – RAG Module
+- Local embeddings + vector store
+- Index codebase and docs
+- Inject context into free model and agents
+- Toggle in AI panel
