@@ -27,6 +27,53 @@ This memory is then used to make future free-model improvements and agent calls 
 3. **Accepted Outcomes**
    - Final accepted prompts or code changes that you kept
 
+## Data Schema (example)
+
+```json
+{
+  "amendments": [
+    {
+      "id": "amd_001",
+      "timestamp": "2026-11-21T23:00:00Z",
+      "project_id": "github.com/josedan10/asistant-terminal",
+      "rough": "add dark mode toggle",
+      "improved": "Add a dark mode toggle to the settings page using the existing theme system. Keep it simple.",
+      "final": "Add a dark mode toggle in Settings. Use the existing ThemeContext. No new dependencies. Persist preference in localStorage.",
+      "tags": ["constraint", "existing-system"],
+      "reason": "missed persistence and existing context"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "dec_001",
+      "timestamp": "2026-11-21T23:05:00Z",
+      "summary": "Prefer localStorage over a settings backend for theme preference",
+      "rejected": ["remote config service"],
+      "reason": "keep the app lightweight and offline-first"
+    }
+  ]
+}
+```
+
+## Retrieval Example
+
+When a new rough instruction arrives (e.g. "add a notification setting"):
+
+1. Find similar past amendments (keyword match or later embeddings on `rough` + `final`).
+2. Inject the top 1–3 as few-shot examples into the free-model prompt:
+
+```text
+Examples of how the user prefers instructions to be refined:
+
+Rough: add dark mode toggle
+Final: Add a dark mode toggle in Settings. Use the existing ThemeContext. No new dependencies. Persist preference in localStorage.
+
+Now refine this new instruction:
+add a notification setting
+```
+
+This makes the free model (and later agents) adapt to your actual preferences without you repeating the same constraints.
+
 ## How it's used
 
 - **Free model (instruction improver)**: Retrieves similar past amendments and injects them as examples so it learns your preferred style and constraints.
