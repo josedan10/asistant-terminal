@@ -1,5 +1,7 @@
 # Agent Orchestrator Design
 
+> Superseded in part by `COMMAND_CENTER.md` (adapter tiers, event model). Orchestrator work is now Phase 6.
+
 ## Goal
 
 Allow agents (Claude, Grok, Gemini, Codex, Junie) to be called:

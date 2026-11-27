@@ -1,5 +1,7 @@
 # Tauri Setup Outline
 
+> Superseded by `TECH_STACK.md` (monorepo layout, versions). The desktop app lives in `apps/desktop` and is an IPC client of `jarvisd`.
+
 ## Create the project
 
 ```bash
