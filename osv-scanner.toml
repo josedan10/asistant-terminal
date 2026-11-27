@@ -1,0 +1,16 @@
+# OSV-Scanner config. Each [[IgnoredVulns]] entry MUST have `reason` and `ignoreUntil` (enforced by ignore-policy).
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0429"
+ignoreUntil = 2027-02-27
+reason = "glib 0.18 VariantStrIter unsoundness. Transitive via Tauri's Linux GTK stack (gtk 0.18); we never call VariantStrIter. Fix needs gtk-rs 0.20, not adopted by Tauri 2.x. Re-check on Tauri upgrades."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0370"
+ignoreUntil = 2027-02-27
+reason = "proc-macro-error unmaintained (informational). Build-time only, transitive via glib-macros 0.18 in Tauri's Linux stack. No runtime exposure."
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2026-0543"
+ignoreUntil = 2027-02-27
+reason = "chrono unmaintained (informational), transitive. No known vulnerability. Track replacement upstream; re-check at ignoreUntil."

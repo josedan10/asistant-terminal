@@ -1,0 +1,16 @@
+pre-commit:
+  parallel: true
+  commands:
+    rustfmt:
+      glob: "*.rs"
+      run: cargo fmt --all --check
+    biome:
+      glob: "*.{ts,tsx,js,json}"
+      run: pnpm exec biome check --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+    gitleaks:
+      run: gitleaks git --staged --no-banner --redact
+
+pre-push:
+  commands:
+    lint:
+      run: just lint

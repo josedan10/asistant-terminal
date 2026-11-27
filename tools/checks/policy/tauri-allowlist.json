@@ -1,0 +1,4 @@
+{
+  "$comment": "Tauri permissions the desktop app may request. Widening this list requires security review (docs/SECURITY.md, T9).",
+  "permissions": ["core:default"]
+}

@@ -1,5 +1,7 @@
 # Codebase RAG (Complementary Module)
 
+> Now part of the Context Broker as an optional, later retrieval tool. See `CONTEXT_OPTIMIZATION.md`.
+
 > **Note**: Decision & Amendment Memory is the higher priority for improving how you work. Classic codebase RAG is useful for grounding in current files and can be added later as a complementary feature.
 
 ## Purpose

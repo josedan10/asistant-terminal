@@ -1,0 +1,133 @@
+---
+source: crates/jarvis-protocol/tests/wire.rs
+expression: events
+---
+[
+  {
+    "sessionId": "s1",
+    "parentId": "p0",
+    "agent": "claude",
+    "ts": 1764000000000,
+    "kind": {
+      "type": "started",
+      "cwd": "/repo",
+      "model": "gpt-6",
+      "task": "fix bug"
+    }
+  },
+  {
+    "sessionId": "s1",
+    "parentId": "p0",
+    "agent": "claude",
+    "ts": 1764000000000,
+    "kind": {
+      "type": "state",
+      "state": "needs_approval"
+    }
+  },
+  {
+    "sessionId": "s1",
+    "parentId": "p0",
+    "agent": "claude",
+    "ts": 1764000000000,
+    "kind": {
+      "type": "message",
+      "role": "assistant",
+      "text": "hello"
+    }
+  },
+  {
+    "sessionId": "s1",
+    "parentId": "p0",
+    "agent": "claude",
+    "ts": 1764000000000,
+    "kind": {
+      "type": "tool_call",
+      "id": "t1",
+      "name": "bash",
+      "summary": "ls -la"
+    }
+  },
+  {
+    "sessionId": "s1",
+    "parentId": "p0",
+    "agent": "claude",
+    "ts": 1764000000000,
+    "kind": {
+      "type": "tool_result",
+      "id": "t1",
+      "ok": true
+    }
+  },
+  {
+    "sessionId": "s1",
+    "parentId": "p0",
+    "agent": "claude",
+    "ts": 1764000000000,
+    "kind": {
+      "type": "approval_request",
+      "id": "a1",
+      "action": "rm -rf build",
+      "risk": "high"
+    }
+  },
+  {
+    "sessionId": "s1",
+    "parentId": "p0",
+    "agent": "claude",
+    "ts": 1764000000000,
+    "kind": {
+      "type": "subagent_spawned",
+      "childId": "s2",
+      "task": "explore"
+    }
+  },
+  {
+    "sessionId": "s1",
+    "parentId": "p0",
+    "agent": "claude",
+    "ts": 1764000000000,
+    "kind": {
+      "type": "progress",
+      "step": "tests",
+      "pct": 42.5
+    }
+  },
+  {
+    "sessionId": "s1",
+    "parentId": "p0",
+    "agent": "claude",
+    "ts": 1764000000000,
+    "kind": {
+      "type": "usage",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 1200,
+      "outputTokens": 340,
+      "cacheReadTokens": 9000,
+      "cacheWriteTokens": 800,
+      "reasoningTokens": 120,
+      "costUsd": 0.0123,
+      "costSource": "reported"
+    }
+  },
+  {
+    "sessionId": "s1",
+    "parentId": "p0",
+    "agent": "claude",
+    "ts": 1764000000000,
+    "kind": {
+      "type": "error",
+      "message": "boom"
+    }
+  },
+  {
+    "sessionId": "s1",
+    "parentId": "p0",
+    "agent": "claude",
+    "ts": 1764000000000,
+    "kind": {
+      "type": "finished",
+      "summary": "done"
+    }
+  }
+]

@@ -1,0 +1,12 @@
+# Fixture: depends on a crate with a license outside deny.toml's allowlist.
+[workspace]
+
+[package]
+name = "fixture-bad-license"
+version = "0.0.0"
+edition = "2021"
+license = "MIT"
+publish = false
+
+[dependencies]
+gpl-dep = { path = "gpl-dep" }

@@ -1,0 +1,12 @@
+# Fixture: depends on a crate version with a known RustSec advisory (RUSTSEC-2020-0071).
+[workspace]
+
+[package]
+name = "fixture-vulnerable"
+version = "0.0.0"
+edition = "2021"
+license = "MIT"
+publish = false
+
+[dependencies]
+time = "=0.1.45"

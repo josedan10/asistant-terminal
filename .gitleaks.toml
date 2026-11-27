@@ -1,0 +1,3 @@
+# gitleaks config: default rules. Each [[allowlists]] entry MUST have a description with "review-by: YYYY-MM-DD".
+[extend]
+useDefault = true
