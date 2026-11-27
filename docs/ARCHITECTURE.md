@@ -3,6 +3,7 @@
 ## Overview
 
 Tauri app with:
+
 - Frontend: React + TypeScript
 - Terminal: xterm.js + PTY (via tauri-plugin-pty or portable-pty)
 - Editor: CodeMirror 6

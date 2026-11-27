@@ -5,6 +5,7 @@
 Improve decisions and the way of working by learning from the instructions, amendments, and choices made during daily work.
 
 Instead of only retrieving code (classic RAG), the system remembers:
+
 - How you refine rough instructions
 - What you change in agent outputs
 - Explicit decisions and preferences ("we prefer X over Y because Z")
@@ -94,4 +95,4 @@ This makes the free model (and later agents) adapt to your actual preferences wi
 
 ## Relation to codebase RAG
 
-Codebase retrieval (classic RAG) remains useful for grounding in current files and can be added later as a complementary module. Decision & Amendment Memory is the higher priority for improving *how* you work.
+Codebase retrieval (classic RAG) remains useful for grounding in current files and can be added later as a complementary module. Decision & Amendment Memory is the higher priority for improving _how_ you work.

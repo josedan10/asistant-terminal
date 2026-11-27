@@ -14,26 +14,26 @@ an estimate as fact.
 
 ## Data sources (best first)
 
-| # | Source | Gives | Notes |
-|---|--------|-------|-------|
-| 1 | **Agent event stream** (tier-1 adapters) | Per-turn/session tokens, often cost; sometimes rate-limit / plan-window info | Most accurate and real-time |
-| 2 | **Agent local session logs** (e.g. Claude Code and Codex keep JSONL transcripts in the user's home directory) | Per-message tokens and model, including sessions started outside Jarvis | Read-only parsing; formats change, so pin by agent version |
-| 3 | **Agent status commands** (e.g. a `/status`- or `/usage`-style view) | Plan window % and reset time | Only if they can be queried non-interactively; 🔬 spike |
-| 4 | **Provider usage APIs** (Anthropic and OpenAI admin/usage APIs) | Authoritative spend for **API-key** billing | Not available for subscription plans; needs admin keys (stored in the keychain) |
-| 5 | **Estimation** | Cost from tokens × a versioned price table; plan % from tokens in the rolling window ÷ the known plan limit | Always labelled `estimated` |
+| #   | Source                                                                                                        | Gives                                                                                                       | Notes                                                                           |
+| --- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| 1   | **Agent event stream** (tier-1 adapters)                                                                      | Per-turn/session tokens, often cost; sometimes rate-limit / plan-window info                                | Most accurate and real-time                                                     |
+| 2   | **Agent local session logs** (e.g. Claude Code and Codex keep JSONL transcripts in the user's home directory) | Per-message tokens and model, including sessions started outside Jarvis                                     | Read-only parsing; formats change, so pin by agent version                      |
+| 3   | **Agent status commands** (e.g. a `/status`- or `/usage`-style view)                                          | Plan window % and reset time                                                                                | Only if they can be queried non-interactively; 🔬 spike                         |
+| 4   | **Provider usage APIs** (Anthropic and OpenAI admin/usage APIs)                                               | Authoritative spend for **API-key** billing                                                                 | Not available for subscription plans; needs admin keys (stored in the keychain) |
+| 5   | **Estimation**                                                                                                | Cost from tokens × a versioned price table; plan % from tokens in the rolling window ÷ the known plan limit | Always labelled `estimated`                                                     |
 
 What each agent exposes is captured in the **Phase 0 spikes** and recorded as a usage capability
 matrix in `docs/spikes/ADAPTER_MATRIX.md`:
 
-| Agent | Tokens per session | Cost | Plan window % / reset | Source |
-|-------|-------------------|------|----------------------|--------|
-| Claude Code | 🔬 | 🔬 | 🔬 | events / transcripts / status |
-| Codex | 🔬 | 🔬 | 🔬 | events / session logs |
-| Cursor | 🔬 | 🔬 | 🔬 | events / dashboard only? |
-| Gemini CLI | 🔬 | 🔬 | 🔬 | stream-json stats |
-| Junie | 🔬 | 🔬 | 🔬 | — |
-| opencode + Ollama (local) | 🔬 | $0 (local) | n/a | events / Ollama counts |
-| Antigravity | 🔬 | 🔬 | 🔬 | observe only |
+| Agent                     | Tokens per session | Cost       | Plan window % / reset | Source                        |
+| ------------------------- | ------------------ | ---------- | --------------------- | ----------------------------- |
+| Claude Code               | 🔬                 | 🔬         | 🔬                    | events / transcripts / status |
+| Codex                     | 🔬                 | 🔬         | 🔬                    | events / session logs         |
+| Cursor                    | 🔬                 | 🔬         | 🔬                    | events / dashboard only?      |
+| Gemini CLI                | 🔬                 | 🔬         | 🔬                    | stream-json stats             |
+| Junie                     | 🔬                 | 🔬         | 🔬                    | —                             |
+| opencode + Ollama (local) | 🔬                 | $0 (local) | n/a                   | events / Ollama counts        |
+| Antigravity               | 🔬                 | 🔬         | 🔬                    | observe only                  |
 
 ## Data model (extends `jarvis-protocol`)
 
@@ -55,11 +55,13 @@ interface UsageEvent {
 
 interface PlanUsageSnapshot {
   provider: "anthropic" | "openai" | "cursor" | "google" | "jetbrains" | "local";
-  account: string;              // a label, never credentials
-  plan?: string;                // e.g. "Max", "Pro", "Plus", "Business"
+  account: string; // a label, never credentials
+  plan?: string; // e.g. "Max", "Pro", "Plus", "Business"
   window: "5h" | "daily" | "weekly" | "monthly";
   usedPct?: number;
-  used?: number; limit?: number; unit?: "tokens" | "requests" | "usd";
+  used?: number;
+  limit?: number;
+  unit?: "tokens" | "requests" | "usd";
   resetsAt?: number;
   source: UsageSource;
   observedAt: number;
@@ -93,12 +95,14 @@ project, agent, model and day. They are computed incrementally, so the UI never 
   you've enabled that.
 
 ## Privacy & security
+
 - Usage data is metadata; only aggregates and plan snapshots sync to the cloud.
 - Admin API keys for provider usage APIs live in the OS keychain, read-only scope only.
 - Parsing local agent logs is read-only and only reads usage fields. Transcript content is never
   loaded into memory beyond what parsing needs, and is never synced.
 
 ## Rollout
+
 - **Phase 0:** spikes fill in the usage capability matrix; `jarvis-protocol` v0 includes
   `UsageEvent` + `PlanUsageSnapshot`.
 - **Phase 1:** usage tables + incremental rollups in the store; versioned price table.

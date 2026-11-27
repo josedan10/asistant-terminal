@@ -6,3 +6,7 @@ src-tauri/target/
 .env
 .env.local
 .DS_Store
+target/
+bench/out/
+apps/desktop/src-tauri/gen/
+*.tsbuildinfo

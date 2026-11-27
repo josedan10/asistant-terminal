@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "includes": ["**", "!**/src/generated", "!**/test/fixtures", "!**/src-tauri/gen", "!**/dist"]
+  },
+  "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
+  "linter": { "rules": { "preset": "recommended" } },
+  "javascript": { "formatter": { "quoteStyle": "double" } },
+  "overrides": [
+    {
+      "includes": ["tools/checks/src/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    }
+  ]
+}

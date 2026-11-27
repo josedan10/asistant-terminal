@@ -5,6 +5,7 @@
 ## Goal
 
 Allow agents (Claude, Grok, Gemini, Codex, Junie) to be called:
+
 - Directly by the user
 - By an orchestrator that routes subtasks
 

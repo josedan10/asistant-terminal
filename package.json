@@ -1,0 +1,17 @@
+{
+  "name": "jarvis",
+  "private": true,
+  "packageManager": "pnpm@12.23.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "test": "pnpm -r --if-present test",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "lint": "biome ci ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.8",
+    "typescript": "7.0.2"
+  }
+}

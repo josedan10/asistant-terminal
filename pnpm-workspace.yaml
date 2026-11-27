@@ -1,0 +1,13 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "tools/*"
+
+# Only these packages may run install scripts (supply-chain hardening).
+allowBuilds:
+  esbuild: true
+
+# Supply-chain hardening (docs/SECURITY.md, T8)
+trustPolicy: no-downgrade
+blockExoticSubdeps: true
+minimumReleaseAge: 10080 # minutes: wait 7 days before installing new releases

@@ -3,6 +3,7 @@
 ## Goal
 
 From your phone you can:
+
 - see live progress for every agent and task running on your computer(s)
 - add tasks to a **backlog** that the computer's orchestrator picks up and works through on its own,
   even when you are away from the computer
@@ -46,14 +47,14 @@ on Linux, Windows service later). The Tauri app is just one client of it, connec
 **The computer's SQLite store is the source of truth for sessions. The cloud stores the backlog
 and lightweight snapshots.**
 
-| Data | Owner | Synced to cloud |
-|------|-------|-----------------|
-| Tasks (backlog) | Cloud | — (phone and computer both read/write) |
-| Session snapshots: state, current step, progress, usage, RSS, last N events (summarized) | Computer | Yes, throttled (≤ 1 update/s per session) |
-| Approval requests | Computer | Yes (must reach the phone) |
-| Commands (approve, reply, stop, new task) | Phone | Yes → delivered to the computer |
-| Full event history, raw terminal output, diffs | Computer | **No by default**; fetched on demand while the computer is online |
-| Devices, presence ("last seen") | Cloud | — |
+| Data                                                                                     | Owner    | Synced to cloud                                                   |
+| ---------------------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------- |
+| Tasks (backlog)                                                                          | Cloud    | — (phone and computer both read/write)                            |
+| Session snapshots: state, current step, progress, usage, RSS, last N events (summarized) | Computer | Yes, throttled (≤ 1 update/s per session)                         |
+| Approval requests                                                                        | Computer | Yes (must reach the phone)                                        |
+| Commands (approve, reply, stop, new task)                                                | Phone    | Yes → delivered to the computer                                   |
+| Full event history, raw terminal output, diffs                                           | Computer | **No by default**; fetched on demand while the computer is online |
+| Devices, presence ("last seen")                                                          | Cloud    | —                                                                 |
 
 The computer buffers outgoing updates locally and replays them after reconnecting. The phone shows
 "computer offline, last seen 14:02", and tasks stay in the backlog until a worker comes back.
@@ -62,30 +63,33 @@ The computer buffers outgoing updates locally and replays them after reconnectin
 
 ```ts
 type TaskStatus =
-  | "backlog"         // captured, not ready
-  | "ready"           // can be picked up
-  | "claimed"         // a worker holds the lease
+  | "backlog" // captured, not ready
+  | "ready" // can be picked up
+  | "claimed" // a worker holds the lease
   | "running"
-  | "needs_approval"  // blocked on you
-  | "review"          // finished, PR/branch ready for you
-  | "done" | "failed" | "cancelled";
+  | "needs_approval" // blocked on you
+  | "review" // finished, PR/branch ready for you
+  | "done"
+  | "failed"
+  | "cancelled";
 
 interface Task {
   id: string;
   title: string;
-  description: string;            // the instruction (later: run through the improver, Phase 11)
-  projectId: string;              // a project registered by a computer (repo → local path stays on device)
-  preferredAgent?: AgentKind;     // or let the dispatcher choose
+  description: string; // the instruction (later: run through the improver, Phase 11)
+  projectId: string; // a project registered by a computer (repo → local path stays on device)
+  preferredAgent?: AgentKind; // or let the dispatcher choose
   priority: 1 | 2 | 3 | 4;
   autonomy: "supervised" | "auto_safe" | "full";
   budget: { maxUsd?: number; maxTokens?: number; maxMinutes?: number };
   dependsOn?: string[];
   status: TaskStatus;
-  claimedBy?: string;             // deviceId
-  leaseExpiresAt?: number;        // renewed by heartbeat; expired lease → back to "ready"
-  sessionIds: string[];           // agent sessions created for this task
+  claimedBy?: string; // deviceId
+  leaseExpiresAt?: number; // renewed by heartbeat; expired lease → back to "ready"
+  sessionIds: string[]; // agent sessions created for this task
   result?: { summary: string; branch?: string; prUrl?: string };
-  createdAt: number; updatedAt: number;
+  createdAt: number;
+  updatedAt: number;
 }
 ```
 
@@ -110,13 +114,14 @@ it reconnects (preferred), or another of your computers may pick it up.
 
 ### Autonomy policy (unattended safety)
 
-| Level | Behaviour |
-|-------|-----------|
-| `supervised` | Every approval request goes to your phone; the agent waits |
-| `auto_safe` | Auto-approve reads, edits inside the worktree, tests and linters; anything else (network, installs, deletes outside the worktree, git push to protected branches, secrets) goes to the phone |
-| `full` | Auto-approve everything inside the worktree sandbox; still hard-blocked: pushing to main, operations outside the project, credential access |
+| Level        | Behaviour                                                                                                                                                                                    |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `supervised` | Every approval request goes to your phone; the agent waits                                                                                                                                   |
+| `auto_safe`  | Auto-approve reads, edits inside the worktree, tests and linters; anything else (network, installs, deletes outside the worktree, git push to protected branches, secrets) goes to the phone |
+| `full`       | Auto-approve everything inside the worktree sandbox; still hard-blocked: pushing to main, operations outside the project, credential access                                                  |
 
 Hard limits that apply to every level:
+
 - cost and time budgets for each task
 - a global kill switch on the phone ("stop everything")
 - one worktree per task, never the main checkout
@@ -140,12 +145,12 @@ The phone can cause code execution on your computer, so this boundary must be ti
 
 ## Technology choices (recommendations)
 
-| Piece | Recommendation | Why | Alternative |
-|-------|----------------|-----|-------------|
-| Sync service | Managed backend with auth, Postgres, realtime and row-level security (for example Supabase) | Login, realtime and per-user data isolation come built in; fastest to an MVP | Small custom Rust/TS relay (more control, more work); Tailscale peer-to-peer (no cloud, but no offline backlog) |
-| Mobile app | React Native + Expo | Shares TypeScript types and logic with the desktop React app; mature push notifications | Tauri 2 mobile (one stack, younger ecosystem); a PWA first (fastest, weaker push on iOS) |
-| Push | Expo Push → APNs/FCM | One API for iOS and Android | Direct APNs/FCM |
-| Shared code | `packages/protocol` (event model, Task, commands as TS types + zod schemas; Rust structs generated or mirrored) | One contract across daemon, desktop, mobile and cloud | — |
+| Piece        | Recommendation                                                                                                  | Why                                                                                     | Alternative                                                                                                     |
+| ------------ | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Sync service | Managed backend with auth, Postgres, realtime and row-level security (for example Supabase)                     | Login, realtime and per-user data isolation come built in; fastest to an MVP            | Small custom Rust/TS relay (more control, more work); Tailscale peer-to-peer (no cloud, but no offline backlog) |
+| Mobile app   | React Native + Expo                                                                                             | Shares TypeScript types and logic with the desktop React app; mature push notifications | Tauri 2 mobile (one stack, younger ecosystem); a PWA first (fastest, weaker push on iOS)                        |
+| Push         | Expo Push → APNs/FCM                                                                                            | One API for iOS and Android                                                             | Direct APNs/FCM                                                                                                 |
+| Shared code  | `packages/protocol` (event model, Task, commands as TS types + zod schemas; Rust structs generated or mirrored) | One contract across daemon, desktop, mobile and cloud                                   | —                                                                                                               |
 
 ## Mobile app screens
 

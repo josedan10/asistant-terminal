@@ -53,11 +53,11 @@ cloud service so the mobile app works. See `REMOTE_AND_MOBILE.md`.
 
 Every adapter emits the same `AgentEvent` stream, so the UI never knows which agent it is showing.
 
-| Tier | How | Fidelity | Use for |
-|------|-----|----------|---------|
-| 1. Structured | Agent's machine-readable mode (stream-JSON, `exec --json`, Agent Client Protocol, SDK) | Full: steps, tool calls, subagents, usage, approvals | Claude Code, Codex, Cursor CLI, Gemini CLI, local models |
-| 2. PTY | Run the interactive CLI in a PTY and infer state with heuristics (idle, prompt, spinner) | Partial: status and raw output | Any CLI without a structured mode (Junie until verified, custom tools) |
-| 3. Observe | Watch log files, hooks or OpenTelemetry exports from agents started elsewhere | Read-only | IDE-bound agents (Antigravity, Cursor IDE), sessions started outside the app |
+| Tier          | How                                                                                      | Fidelity                                             | Use for                                                                      |
+| ------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 1. Structured | Agent's machine-readable mode (stream-JSON, `exec --json`, Agent Client Protocol, SDK)   | Full: steps, tool calls, subagents, usage, approvals | Claude Code, Codex, Cursor CLI, Gemini CLI, local models                     |
+| 2. PTY        | Run the interactive CLI in a PTY and infer state with heuristics (idle, prompt, spinner) | Partial: status and raw output                       | Any CLI without a structured mode (Junie until verified, custom tools)       |
+| 3. Observe    | Watch log files, hooks or OpenTelemetry exports from agents started elsewhere            | Read-only                                            | IDE-bound agents (Antigravity, Cursor IDE), sessions started outside the app |
 
 An adapter can combine tiers. For example, Claude Code can run structured while also sending hook
 and OTel events so that subagent starts and stops are captured.
@@ -72,15 +72,29 @@ or (b) build a minimal loop in the core later. Start with (a).
 ## Normalized event model
 
 ```ts
-type AgentKind = "claude" | "codex" | "cursor" | "gemini" | "antigravity" | "junie" | "local" | "generic";
+type AgentKind =
+  | "claude"
+  | "codex"
+  | "cursor"
+  | "gemini"
+  | "antigravity"
+  | "junie"
+  | "local"
+  | "generic";
 
 type SessionState =
-  | "queued" | "running" | "waiting_input" | "needs_approval"
-  | "paused" | "done" | "failed" | "stopped";
+  | "queued"
+  | "running"
+  | "waiting_input"
+  | "needs_approval"
+  | "paused"
+  | "done"
+  | "failed"
+  | "stopped";
 
 interface AgentEvent {
   sessionId: string;
-  parentId?: string;        // subagent → parent session (builds the tree)
+  parentId?: string; // subagent → parent session (builds the tree)
   agent: AgentKind;
   ts: number;
   kind:
@@ -92,9 +106,17 @@ interface AgentEvent {
     | { type: "approval_request"; id: string; action: string; risk?: "low" | "high" }
     | { type: "subagent_spawned"; childId: string; task: string }
     | { type: "progress"; step?: string; pct?: number }
-    | { type: "usage"; model?: string; inputTokens: number; outputTokens: number;
-        cacheReadTokens?: number; cacheWriteTokens?: number; reasoningTokens?: number;
-        costUsd?: number; costSource?: "reported" | "parsed_log" | "provider_api" | "estimated" }
+    | {
+        type: "usage";
+        model?: string;
+        inputTokens: number;
+        outputTokens: number;
+        cacheReadTokens?: number;
+        cacheWriteTokens?: number;
+        reasoningTokens?: number;
+        costUsd?: number;
+        costSource?: "reported" | "parsed_log" | "provider_api" | "estimated";
+      }
     // plan-window usage is a separate PlanUsageSnapshot; see USAGE_MONITORING.md
     | { type: "error"; message: string }
     | { type: "finished"; summary?: string };
@@ -108,12 +130,12 @@ tail of recent events. It does not subscribe to the full history.
 
 Targets to enforce with a benchmark harness from Phase 0 onward:
 
-| Metric | Target |
-|--------|--------|
-| App idle, no agents | < 120 MB RSS (app + WebView) |
-| Per additional supervised session (app side, excluding the agent's own process) | < 10 MB |
-| 10 sessions, 1 terminal visible | < 250 MB RSS |
-| UI frame time while 10 agents stream | < 16 ms p95 |
+| Metric                                                                          | Target                       |
+| ------------------------------------------------------------------------------- | ---------------------------- |
+| App idle, no agents                                                             | < 120 MB RSS (app + WebView) |
+| Per additional supervised session (app side, excluding the agent's own process) | < 10 MB                      |
+| 10 sessions, 1 terminal visible                                                 | < 250 MB RSS                 |
+| UI frame time while 10 agents stream                                            | < 16 ms p95                  |
 
 Techniques:
 
@@ -153,7 +175,7 @@ restart with the same task, and open the session in a terminal.
 
 ## Open questions
 
-- Should sessions started *outside* the app (for example `claude` in another terminal) be
+- Should sessions started _outside_ the app (for example `claude` in another terminal) be
   first-class (needs hooks or OTel ingest), or should only app-launched agents be supported at
   first? **Recommendation:** app-launched first, with observe-only as an add-on.
 - Should approvals be routed through the app, by putting the agent in a mode where it asks the host,

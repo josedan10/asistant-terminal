@@ -4,13 +4,14 @@
 
 Expose the command center as an **MCP server**, so any MCP-capable assistant (Claude desktop or
 web, ChatGPT, Cursor, Gemini, and others) can:
+
 - browse your registered projects through scoped, read-only retrieval
 - check tasks, agents and progress
 - add tasks to the backlog for your computer to work on
 - read and propose decisions for Decision & Amendment Memory
 
-For example, in a ChatGPT or Claude conversation you could say: *"Look at how auth works in
-find-pitch and queue a task for Claude Code to add rate limiting."*
+For example, in a ChatGPT or Claude conversation you could say: _"Look at how auth works in
+find-pitch and queue a task for Claude Code to add rate limiting."_
 
 This is the same command surface the phone uses, offered through a standard protocol.
 
@@ -37,23 +38,23 @@ This is the same command surface the phone uses, offered through a standard prot
   separately authorized, revocable client.
 
 > This is distinct from the **internal** jarvis MCP in `CONTEXT_OPTIMIZATION.md`, which serves the
-> agents *we* launch. The two share code but have different tool sets and trust levels.
+> agents _we_ launch. The two share code but have different tool sets and trust levels.
 
 ## Tools
 
-| Tool | Scope | Notes |
-|------|-------|-------|
-| `list_projects` | `read` | Only projects you opted in as "exposed to external assistants" |
-| `get_project_outline` | `read` | Repo map from the Context Broker, not raw dumps |
-| `search_code`, `get_symbol`, `read_file` | `read:code` | Ignore lists apply; secret redaction; size limits; per-project opt-in |
-| `list_tasks`, `get_task` | `read` | Status, summary, branch/PR link |
-| `get_session_summary` | `read` | Summarized timeline, never raw terminal output |
-| `get_decisions` | `read` | From Decision Memory |
-| `get_usage` | `read` | Task/project token totals and plan-window snapshots |
-| `create_task` | `write:tasks` | Lands as **`backlog` (needs your confirmation)**, never directly `ready` |
-| `comment_on_task` | `write:tasks` | Adds context to an existing task |
-| `propose_decision` | `write:memory` | Pending until you confirm it, which protects against memory poisoning |
-| `stop_task` | `control` | Stopping is safe to allow; off by default |
+| Tool                                     | Scope          | Notes                                                                    |
+| ---------------------------------------- | -------------- | ------------------------------------------------------------------------ |
+| `list_projects`                          | `read`         | Only projects you opted in as "exposed to external assistants"           |
+| `get_project_outline`                    | `read`         | Repo map from the Context Broker, not raw dumps                          |
+| `search_code`, `get_symbol`, `read_file` | `read:code`    | Ignore lists apply; secret redaction; size limits; per-project opt-in    |
+| `list_tasks`, `get_task`                 | `read`         | Status, summary, branch/PR link                                          |
+| `get_session_summary`                    | `read`         | Summarized timeline, never raw terminal output                           |
+| `get_decisions`                          | `read`         | From Decision Memory                                                     |
+| `get_usage`                              | `read`         | Task/project token totals and plan-window snapshots                      |
+| `create_task`                            | `write:tasks`  | Lands as **`backlog` (needs your confirmation)**, never directly `ready` |
+| `comment_on_task`                        | `write:tasks`  | Adds context to an existing task                                         |
+| `propose_decision`                       | `write:memory` | Pending until you confirm it, which protects against memory poisoning    |
+| `stop_task`                              | `control`      | Stopping is safe to allow; off by default                                |
 
 **Never exposed:** approving agent actions, running shell commands, raising autonomy levels,
 editing files directly, managing devices, or reading raw logs or secrets. Those stay on the
@@ -82,6 +83,7 @@ for example from a web page it just browsed.
   poisoning), T7 (remote abuse).
 
 ## Rollout
+
 - **Phase 8:** local MCP server in `jarvisd` (read tools + `create_task` with confirmation); then
   the remote endpoint on the sync service with OAuth 2.1, per-client scopes and the audit log.
   Verify it against Claude (desktop and web) and ChatGPT, whose connector support and limits need
