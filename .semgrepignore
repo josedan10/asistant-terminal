@@ -1,0 +1,7 @@
+# Each ignored path MUST be preceded by a comment "# reason: ... review-by: YYYY-MM-DD" (enforced by ignore-policy).
+# reason: build output and vendored deps are not our source. review-by: 2027-06-01
+target/
+# reason: third-party packages. review-by: 2027-06-01
+node_modules/
+# reason: generated from Rust types, scanned at the source. review-by: 2027-06-01
+packages/protocol/src/generated/

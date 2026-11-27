@@ -1,0 +1,27 @@
+{
+  "$comment": "Required CI shape. workflow-lint fails if a workflow drops a job, OS or trigger listed here.",
+  "workflows": {
+    "ci.yml": {
+      "triggers": ["pull_request", "push"],
+      "jobs": {
+        "rust": { "os": ["ubuntu-latest", "macos-latest"] },
+        "ts": {},
+        "protocol-drift": {},
+        "checks": {},
+        "desktop": { "os": ["ubuntu-latest", "macos-latest"] }
+      }
+    },
+    "security.yml": {
+      "triggers": ["pull_request", "schedule"],
+      "jobs": {
+        "osv-scanner": {},
+        "cargo-deny": {},
+        "gitleaks": {},
+        "semgrep": {},
+        "codeql": {},
+        "zizmor": {}
+      }
+    }
+  },
+  "dependabotEcosystems": ["cargo", "npm", "github-actions"]
+}
