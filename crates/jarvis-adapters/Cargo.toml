@@ -1,0 +1,13 @@
+[package]
+name = "jarvis-adapters"
+description = "Agent adapters: normalize each agent's output into AgentEvents"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+jarvis-protocol = { path = "../jarvis-protocol" }
+[lints]
+workspace = true

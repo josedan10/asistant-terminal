@@ -1,0 +1,14 @@
+---
+source: crates/jarvis-protocol/tests/wire.rs
+expression: plan_snapshot()
+---
+{
+  "provider": "anthropic",
+  "account": "personal",
+  "plan": "Max",
+  "window": "5h",
+  "usedPct": 63.0,
+  "resetsAt": 1764010000000,
+  "source": "estimated",
+  "observedAt": 1764000000000
+}

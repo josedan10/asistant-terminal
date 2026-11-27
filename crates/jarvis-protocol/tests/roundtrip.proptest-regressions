@@ -1,0 +1,7 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 24ba861329c9bfdcbbb5663faed2c4d5b8c7d31b638003ed7bec30de36234d64 # shrinks to k = Usage(UsageEvent { model: None, input_tokens: 0, output_tokens: 0, cache_read_tokens: None, cache_write_tokens: None, reasoning_tokens: None, cost_usd: Some(242871.62837217966), cost_source: Some(Estimated) }), ts = 0

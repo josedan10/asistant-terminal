@@ -1,0 +1,21 @@
+[package]
+name = "jarvis-protocol"
+description = "Shared event, usage and plan types for Jarvis (source of truth for TS bindings)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+serde.workspace = true
+thiserror.workspace = true
+ts-rs.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+insta.workspace = true
+proptest.workspace = true
+
+[lints]
+workspace = true
