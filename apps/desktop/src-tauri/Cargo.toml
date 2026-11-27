@@ -1,0 +1,21 @@
+[package]
+name = "desktop"
+description = "Jarvis desktop shell (Tauri) — a client of jarvisd"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+rust-version.workspace = true
+
+[lib]
+name = "desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6", features = [] }
+
+[dependencies]
+tauri = { version = "2.12", features = [] }
+
+[lints]
+workspace = true
